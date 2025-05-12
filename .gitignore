@@ -1,0 +1,46 @@
+# Node modules
+/node_modules/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# VS Code settings
+.vscode/
+
+# Build directories
+/dist/
+/build/
+/out/
+
+# Dependency directories (if using a package manager)
+.pnp/
+/.pnp.js
+
+# Environment variables
+*.env
+!.envsample
+
+# npm package lock files
+package-lock.json
+yarn.lock
+
+# Coverage directories
+/coverage/
+
+# Temporary files
+*.tmp
+*.swp
+
+# IDE settings
+.idea/
+
+# Docker
+.docker/
+
+# Other configurations (like if you're using some specific tools)
+*.bak
+*.orig
