@@ -25,7 +25,7 @@ app.get('/auth', (req, res) => {
   const state = crypto.randomBytes(16).toString('hex');
   sessionStore[state] = { store_domain }; // Save state and store domain
 
-  const authUrl = `https://apps.getneto.com/oauth/v2/auth?client_id=${process.env.NETO_CLIENT_ID}&redirect_uri=${process.env.REDIRECT_URI}&response_type=code&store_domain=${store_domain}&state=${state}`;
+  const authUrl = `https://api.netodev.com/oauth/v2/auth?version=2&client_id=${process.env.NETO_CLIENT_ID}&redirect_uri=${process.env.REDIRECT_URI}&response_type=code&store_domain=${store_domain}&state=${state}`;
   res.redirect(authUrl);
 });
 
@@ -43,7 +43,6 @@ app.get('/neto/callback', async (req, res) => {
     const tokenData = await exchangeToken({
       code,
       redirect_uri: process.env.REDIRECT_URI,
-      store_domain: session.store_domain,
     });
 
     // Save token in session store (or DB in production)
@@ -52,7 +51,7 @@ app.get('/neto/callback', async (req, res) => {
     res.send(`
       <h2>OAuth Successful!</h2>
       <p>Access Token: ${tokenData.access_token}</p>
-      <p>Store Domain: ${tokenData.store_domain}</p>
+      <p>Token Data: ${tokenData}</p>
       <a href="/get-items?state=${state}">Get Items from Neto</a>
     `);
   } catch (err) {
@@ -65,6 +64,7 @@ app.get('/neto/callback', async (req, res) => {
 app.get('/get-items', async (req, res) => {
   const { state } = req.query;
   const session = sessionStore[state];
+  console.log("Session Data", session)
 
   if (!session || !session.token) return res.status(403).send('Session not found or not authenticated');
 

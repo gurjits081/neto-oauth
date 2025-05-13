@@ -12,7 +12,7 @@ export const exchangeToken = async ({ code, redirect_uri }) => {
     params.append('grant_type', 'authorization_code');
     params.append('code', code);
 
-    const response = await axios.post('https://apps.getneto.com/oauth/v2/token', params, {
+    const response = await axios.post('https://api.netodev.com/oauth/v2/token?version=2', params, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
@@ -35,8 +35,8 @@ export const exchangeToken = async ({ code, redirect_uri }) => {
 
 export const getNetoData = async (tokenData) => {
   try {
-    const { store_domain, access_token } = tokenData;
-    const url = `https://${store_domain}/do/WS/NetoAPI`;
+    const { api_id, access_token } = tokenData;
+    const url = `https://api.netodev.com/v1/stores/${api_id}/do/WS/NetoAPI`;
   
     const payload = {
           "Filter": {
@@ -227,11 +227,9 @@ export const getNetoData = async (tokenData) => {
     };
   
     const headers = {
+      Authorization: `Bearer ${access_token}`,
       'Content-Type': 'application/json',
-      Accept: 'application/json',
       NETOAPI_ACTION: 'GetItem',
-      X_ACCESS_KEY: process.env.NETO_CLIENT_ID,
-      X_SECRET_KEY: access_token
     };
   
     const response = await axios.post(url, payload, { headers });
